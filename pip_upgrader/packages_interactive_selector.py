@@ -113,7 +113,7 @@ class PackageInteractiveSelector(object):
 
 
     def _print_upgrades(self, packages_list):
-        with open('uprades', 'wb') as myfile:
+        with open('uprades.csv', 'w') as myfile:
             wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
             wr.writerow(packages_list)
 
