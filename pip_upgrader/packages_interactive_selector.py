@@ -113,7 +113,7 @@ class PackageInteractiveSelector(object):
             raise KeyboardInterrupt()
 
         if choice == 'p':
-            print(Color('{autored}Print.{/autored}'))
+            print(Color('{autogreen}Print. CSV file was created.{/autogreen}'))
             self._print_upgrades()
             raise KeyboardInterrupt()
 
@@ -132,8 +132,8 @@ class PackageInteractiveSelector(object):
 
     def _print_upgrades(self):
         packages_list = self._get_packages_list_to_print()
-        with open('uprades.csv', 'w') as myfile:
-            wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+        with open('AVAILABLE_UPGRADES.csv', 'w', newline='') as myfile:
+            wr = csv.writer(myfile, quoting=csv.QUOTE_NONE)
             for row in packages_list:
                 wr.writerow(row)
 
