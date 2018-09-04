@@ -1,5 +1,5 @@
 from __future__ import print_function, unicode_literals
-
+import csv
 from collections import OrderedDict
 
 from colorclass import Color
@@ -49,7 +49,7 @@ class PackageInteractiveSelector(object):
     def get_packages(self):
         return self.selected_packages
 
-    def ask_for_packages(self):
+    def _get_packages_list(self):
         data = [[
             Color('{autoblue}No.{/autoblue}'),
             Color('{autoblue}Package{/autoblue}'),
@@ -65,13 +65,19 @@ class PackageInteractiveSelector(object):
                          package['latest_version'],
                          package['upload_time']])
 
+        return data
+
+    def ask_for_packages(self):
+
+        packages_list = self._get_packages_list()
+        table = AsciiTable(packages_list).table
+
         print('')
         print(Color('{autogreen}Available upgrades:{/autogreen}'))
-        table = AsciiTable(data)
-        print(table.table)
+        print(table)
         print('')
 
-        print('Please choose which packages should be upgraded. Choices: "all", "q" (quit), "x" (exit) or "1 2 3"')
+        print('Please choose which packages should be upgraded. Choices: "all", "q" (quit), "x" (exit), "p" (print) or "1 2 3"')
         choice = user_input(Color('{autogreen}Choice:{/autogreen} ')).strip()
 
         if not choice and not choice.strip():
@@ -88,6 +94,11 @@ class PackageInteractiveSelector(object):
             print(Color('{autored}Exit.{/autored}'))
             raise KeyboardInterrupt()
 
+        if choice == 'p':
+            print(Color('{autored}Print.{/autored}'))
+            self._print_upgrades(packages_list)
+            raise KeyboardInterrupt()
+
         if choice == "all":
             self._select_packages(self.packages_for_upgrade.keys())
         else:
@@ -99,6 +110,12 @@ class PackageInteractiveSelector(object):
             except ValueError:  # pragma: nocover
                 print(Color('{autored}Invalid choice{/autored}'))
                 raise KeyboardInterrupt()
+
+
+    def _print_upgrades(self, packages_list):
+        with open('uprades', 'wb') as myfile:
+            wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+            wr.writerow(packages_list)
 
     def _select_packages(self, indexes):
         selected = []
