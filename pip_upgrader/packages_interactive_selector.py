@@ -67,6 +67,24 @@ class PackageInteractiveSelector(object):
 
         return data
 
+    def _get_packages_list_to_print(self):
+        data = [[
+            'No.',
+            'Package',
+            'Current version',
+            'Latest version',
+            'Release date',
+        ]]
+
+        for i, package in self.packages_for_upgrade.items():
+            data.append(['{}'.format(i),
+                         '{}'.format(package['name']),
+                         package['current_version'],
+                         package['latest_version'],
+                         package['upload_time']])
+
+        return data
+
     def ask_for_packages(self):
 
         packages_list = self._get_packages_list()
@@ -96,7 +114,7 @@ class PackageInteractiveSelector(object):
 
         if choice == 'p':
             print(Color('{autored}Print.{/autored}'))
-            self._print_upgrades(packages_list)
+            self._print_upgrades()
             raise KeyboardInterrupt()
 
         if choice == "all":
@@ -112,10 +130,12 @@ class PackageInteractiveSelector(object):
                 raise KeyboardInterrupt()
 
 
-    def _print_upgrades(self, packages_list):
+    def _print_upgrades(self):
+        packages_list = self._get_packages_list_to_print()
         with open('uprades.csv', 'w') as myfile:
             wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
-            wr.writerow(packages_list)
+            for row in packages_list:
+                wr.writerow(row)
 
     def _select_packages(self, indexes):
         selected = []
