@@ -83,7 +83,8 @@ This will display any versions that can be upgraded, and helps you to manually m
 Features
 --------
 
-to be completed
+Type 'p' as choice to create a csv file with the required upgrades.
+
 
 Final notes
 -----------
